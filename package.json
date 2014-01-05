@@ -3,8 +3,13 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node test.js"
+    "test": "node test.js"
   },
+  "main": "./index.js",
   "dependencies": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:MarkDuckworth/node-standardtoolbox.git"
   }
 }
