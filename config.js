@@ -17,50 +17,50 @@ var configs = {};
  *        argument was not passed, then the config filename will be based on the script file arg for node.
  * @returns the parsed JSON configuration from the config file, or null if the configuraiton file
  *          cannot be read or parsed.
- */ 
+ */
 module.exports.get = function( filename ) {
-  var configFilename = filename,
-      configPath = '',
-      configFullPath,
-      config = null;
-  
-  // get config file name
-  if( !configFilename ) {
-    configFilename = ( process.argv[1] || 'config' ) + '.config';
-  }
-  
-  // resolve absolute path to config file
-  if( process.argv[1] ) {
-    configPath = path.dirname( process.argv[1] );
-  }
-  configFullPath = path.resolve( configPath, configFilename );
-  
-  // return existing config if already in memory
-  if( configs[ configFullPath ]) {
-    return configs[ configFullPath ];
-  }
-  
-  // load config from file, if file exists
-  if( fs.existsSync( configFullPath )) {
-    var fileContent = fs.readFileSync( configFullPath );
-    if( fileContent ) {
-      // parse and store in the array of named config instances
-      try {
-        config = JSON.parse( fileContent );
-        configs[ configFullPath ] = config;
-      }
-      catch (e) {
-        console.log("Unable to parse the configuration file: ", configFullPath);
-        console.log("JSON.parse error:", util.inspect(e));
-      }
+    var configFilename = filename,
+        configPath = '',
+        configFullPath,
+        config = null;
+
+    // get config file name
+    if( !configFilename ) {
+        configFilename = ( process.argv[1] || 'config' ) + '.config';
+    }
+
+    // resolve absolute path to config file
+    if( process.argv[1] ) {
+        configPath = path.dirname( process.argv[1] );
+    }
+    configFullPath = path.resolve( configPath, configFilename );
+
+    // return existing config if already in memory
+    if( configs[ configFullPath ]) {
+        return configs[ configFullPath ];
+    }
+
+    // load config from file, if file exists
+    if( fs.existsSync( configFullPath )) {
+        var fileContent = fs.readFileSync( configFullPath );
+        if( fileContent ) {
+            // parse and store in the array of named config instances
+            try {
+                config = JSON.parse( fileContent );
+                configs[ configFullPath ] = config;
+            }
+            catch (e) {
+                console.log("Unable to parse the configuration file: ", configFullPath);
+                console.log("JSON.parse error:", util.inspect(e));
+            }
+        }
+        else {
+            console.log("Unable to read the configuration file: ", configFullPath);
+        }
     }
     else {
-      console.log("Unable to read the configuration file: ", configFullPath);
+        console.log("Unable to find the configuration file: '", configFullPath, "'");
     }
-  }
-  else {
-    console.log("Unable to find the configuration file: '", configFullPath, "'");
-  }
-  
-  return config;
+
+    return config;
 }

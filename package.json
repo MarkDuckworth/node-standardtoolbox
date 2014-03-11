@@ -8,6 +8,10 @@
   "main": "./index.js",
   "dependencies": {
   },
+  "devDependencies": {
+      "mocha": "*",
+      "chai": "*"
+  },
   "repository": {
     "type": "git",
     "url": "git@github.com:MarkDuckworth/node-standardtoolbox.git"
