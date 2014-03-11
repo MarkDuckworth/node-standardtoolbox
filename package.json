@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "test": "node test.js"
+    "test": "node ./node_modules/mocha/bin/mocha"
   },
   "main": "./index.js",
   "dependencies": {
