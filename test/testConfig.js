@@ -105,4 +105,58 @@ describe('config', function(){
                 expect(config.get(filepath)).to.deep.equal(hash);
             });
     });
+
+    describe('#get(...)', function(){
+        describe("when called for a multi-level json object", function() {
+            var filenameOnly = "deep.config";
+            var deepHash = {i: {am: {a: ["multi", {level: "hash", yes: true}]}}};
+            beforeEach(function() {
+                filepath = path.join(path.dirname( process.argv[1] ), filenameOnly);
+                fs.writeFileSync(filepath, JSON.stringify(deepHash));
+            });
+
+            it('should load a multi-level hash',
+                function(){
+                    expect(config.get(filenameOnly)).to.deep.equal(deepHash);
+                });
+        });
+
+        describe("on consecutive calls to get for the same file", function() {
+            var filenameOnly = "deep.config";
+            var deepHash = {i: {am: {a: ["multi", {level: "hash", yes: true}]}}};
+            var anotherHash = {hello: true};
+            beforeEach(function() {
+                filepath = path.join(path.dirname( process.argv[1] ), filenameOnly);
+                fs.writeFileSync(filepath, JSON.stringify(deepHash));
+                config.get(filenameOnly);
+                fs.writeFileSync(filepath, JSON.stringify(anotherHash));
+            });
+
+            it('should not reload the config from the config file',
+                function(){
+                    expect(config.get(filenameOnly)).to.deep.equal(deepHash);
+                });
+        });
+
+        describe("if the config does not contain valid JSON", function() {
+            var filenameOnly = "invalid.config";
+            var notJson = '{"asdf":vev}';
+            beforeEach(function() {
+                filepath = path.join(path.dirname( process.argv[1] ), filenameOnly);
+                fs.writeFileSync(filepath, notJson);
+            });
+
+            it('should return null', function(){
+                    expect(config.get(filenameOnly)).to.be.null;
+                });
+        });
+
+        describe("if the config does not exist", function() {
+            var filenameOnly = "no-existing.config";
+
+            it('should return null', function(){
+                    expect(config.get(filenameOnly)).to.be.null;
+                });
+        });
+    });
 });
