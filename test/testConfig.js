@@ -4,6 +4,7 @@
 var expect = require("chai").expect,
     fs = require('fs'),
     path = require('path'),
+    util = require('util'),
     config = require('../config');
 
 describe('config', function(){
@@ -11,7 +12,9 @@ describe('config', function(){
         hash = {a: 1, b: 2};
 
     afterEach(function() {
-        fs.unlink(filepath);
+        if (fs.existsSync(filepath)) {
+            fs.unlinkSync(filepath);
+        }
     });
 
     describe('#get()', function(){
@@ -76,16 +79,25 @@ describe('config', function(){
         /**
          * Test that the config file is loaded from a file at a specified path
          */
-        var filename = "mark.config";
-        var directory = path.resolve(process.cwd(), "/temp/");
+        var filename;
+        var directory;
+
         beforeEach(function() {
+            filename = "bart.config";
+            directory = path.resolve(process.cwd(), "./tempTestingDirectory/");
             fs.mkdirSync(directory);
             filepath = path.resolve(directory, filename);
             fs.writeFileSync(filepath, JSON.stringify(hash));
         });
 
         afterEach(function() {
-            fs.rmdirSync(directory);
+            try {
+                fs.unlinkSync(filepath);
+                fs.rmdirSync(directory);
+            }
+            catch (e) {
+                console.log(util.inspect(e));
+            }
         });
 
         it('should get the config file is loaded from a file in the specified directory',
