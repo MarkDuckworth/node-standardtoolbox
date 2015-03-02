@@ -13,9 +13,11 @@ Getting Started
 
 Modules
 -------
-The node-standardtoolbox contains several modules.
+The node-standardtoolbox contains one module.
 
 ## config
+**Note:** The simple way to load configuration from JSON is to use Node's `require` method and should be preferred over this.
+
 The config module loads configuration object from a JSON formatted configuration file.
 
     var config = require('node-standardtoolbox').config;
